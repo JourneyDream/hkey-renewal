@@ -53,3 +53,6 @@ LOG_LEVEL=debug node index.js --once
 4. 重新读取 JSON → 提取 `key`
 5. 写入目标 YAML 对应字段
 6. `docker restart` 指定容器
+
+## 友情链接
+- [LinuxDo](https://linux.do/)
