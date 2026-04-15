@@ -1,0 +1,14 @@
+{
+  "name": "cert-monitor",
+  "version": "1.0.0",
+  "description": "监控 JSON 中的 AI Key 过期时间，自动续期并更新 YAML + 重启 Docker",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "once": "node index.js --once"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "lodash": "^4.17.21"
+  }
+}

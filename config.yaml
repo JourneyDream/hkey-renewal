@@ -1,0 +1,28 @@
+# 源 JSON 文件配置
+json_path: "/root/.hermes/auth.json"
+
+# 轮询间隔（毫秒），默认 10 分钟
+check_interval: 600000
+
+# 快过期阈值（毫秒），30 分钟
+warning_ms: 1800000
+
+# 续期脚本
+renew:
+  command: "/root/cert-monitor/renew.sh"
+  timeout: 120000
+
+# JSON 中 aikey 的字段路径（支持嵌套用点号，如 "data.aikey"）
+key_path: "providers.nous.agent_key"
+expiry_path: "providers.nous.agent_key_expires_at"
+
+# 目标 YAML 配置
+yaml_target:
+  path: "/root/CLIProxyAPI/config.yaml"
+  # YAML 中 key 写入的字段路径
+  key_path: "openai-compatibility[name=Hermes].api-key-entries[0].api-key"
+
+# Docker 容器
+docker:
+  container_name: "cli-proxy-api"
+  restart_timeout: 30
