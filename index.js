@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const yaml = require('js-yaml');
+const _ = require('lodash');
 const log = require('./lib/logger');
 const { checkExpiry } = require('./lib/checker');
 const { renew } = require('./lib/renewer');
@@ -58,6 +59,21 @@ async function runOnce(config) {
 
   // 3. 已过期或即将过期 → 执行续期流程
   log.warn(`Key 状态: ${result.status}，开始续期流程...`);
+
+  // 当处于 warning 状态时，提前 1 小时改写 JSON 中的过期时间字段，强制触发硬续期
+  if (result.status === 'warning') {
+    const currentExpiry = result.expiredAt;
+    const offsetMs = 3600000; // 1 小时
+    const newExpiryDate = new Date(currentExpiry.getTime() - offsetMs);
+    
+    log.info(`[提前续期防护] 正在修改 JSON 的过期时间字段以触发强制续期...`);
+    log.info(`原设定过期时间: ${currentExpiry.toISOString()} -> 提前为: ${newExpiryDate.toISOString()}`);
+    
+    const data = result.raw;
+    _.set(data, expiry_path, newExpiryDate.toISOString());
+    fs.writeFileSync(json_path, JSON.stringify(data, null, 2));
+  }
+
   renew(renewCfg.command, renewCfg.timeout);
 
   // 4. 同步新的 key
